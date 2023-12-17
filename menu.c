@@ -71,8 +71,8 @@ void change(char** str, int size, int command){
         }
     if(command == 1){
 
-            char** text = clear_double(text,size,&new_size);
-            char** result = task_1(str, new_size);
+            char** text = clear_double(str,size,&new_size);
+            char** result = task_1(text, new_size);
             output(result,new_size);
             clear(result ,new_size);
             clear(text,new_size);
@@ -80,7 +80,7 @@ void change(char** str, int size, int command){
         }
     if(command == 2){
             int size_after_t_2 = 0;
-            char** text = clear_double(text,size,&new_size);
+            char** text = clear_double(str,size,&new_size);
             char** result = task_2(text, new_size,&size_after_t_2);
             
             output(result,size_after_t_2);
@@ -93,7 +93,7 @@ void change(char** str, int size, int command){
         }
     if(command == 4){
         int size_after_t_4 = 0;
-        char** text = clear_double(text,size,&new_size);
+        char** text = clear_double(str,size,&new_size);
         char** result = task_4(text, new_size, &size_after_t_4);
         output(result,size_after_t_4);
         clear(result,size_after_t_4);
