@@ -399,11 +399,12 @@ char* removeWord(char* str, char* word) {
                 free(add_word);
                 capacity = 10;
                 add_word = malloc(sizeof(char) * capacity);
+                len_word = 0;
             }
             result[idx++] = *(str + i);
         }
         
-        else if(isalpha(*(str + i))){
+        else if(isalpha(str[i])){
             len_word++;
             if(len_word >= capacity)
             {
