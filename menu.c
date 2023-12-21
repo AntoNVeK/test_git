@@ -376,27 +376,53 @@ char* createLowerCaseArray(int size, char* str){
 
     
 char* removeWord(char* str, char* word) {
-    char arr[strlen(str)];
-    for(int i = 0;i < strlen(str);i++){
-        if(str[i] != '.')
-            arr[i] = *(str + i);
-    }
-    char sep[10] = " ";
+
     char* result = malloc(sizeof(char) * strlen(str) + 1);
     int idx = 0;
-    arr[strlen(str) - 1] = '\0';
-    char *token = strtok(arr, sep);
-    while(token != NULL){
-            if(strcmp(token, word) != 0){
-                for(int i = 0; i < strlen(token); i++){
-                        result[idx++] = token[i];    
-                }
-                result[idx++] = ' ';
 
+    
+    
+    int capacity = 10;
+    char* add_word = malloc(sizeof(char) * capacity);
+    int len_word = 0;
+
+    for(int i = 0;i < strlen(str);i++){
+
+        if(str[i] == ' ' || str[i] == ',' || str[i] == '.'){
+            if(add_word != NULL){
+                add_word[len_word] = '\0';
+                if(strcmp(add_word, word) != 0){
+                    for(int j = 0; j < strlen(add_word); j++){
+                        result[idx++] = *(add_word + j);
+                    }
+                }
+                free(add_word);
+                capacity = 10;
+                add_word = malloc(sizeof(char) * capacity);
             }
-            token = strtok(NULL, sep);
+            result[idx++] = *(str + i);
+        }
+        
+        else if(isalpha(*(str + i))){
+            len_word++;
+            if(len_word >= capacity)
+            {
+                capacity = capacity * 1.5;
+                add_word = realloc(add_word, sizeof(char) * capacity);
+            }
+            add_word[len_word - 1] = *(str + i);
+
+
+
+        }
+
+
 
     }
+
+
+
+
  
     if(idx){
         result[idx - 1] = '.';
