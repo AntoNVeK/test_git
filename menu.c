@@ -17,12 +17,14 @@ char** task_1(char** str, int size);
 char** task_2(char** str, int size,int* new_size);
 void task_3(char** str, int size);
 char** task_4(char** str, int size,int* new_size);
+char** task_9(char** str,int size);
 int cmp(const void *a, const void *b);
 char* removeWord(char* str, char* word);
 int compareSentences(const void *a, const void *b);
 float calculateAverage(const char *str);
 char* space(char* str);
-
+char* replacement(char* str_1);
+char* bin(char* num);
 
 int main(){
     setlocale(LC_CTYPE, "");
@@ -30,7 +32,7 @@ int main(){
 
     int command;        
     scanf("%d", &command);
-    if(command > 5 || command < 0)
+    if((command > 5 || command < 0) && command != 9)
         printf("error: первый символ должнен быть числом от 0 до 5");
     else if(command == 5)
         printf("1: Во всемы тексте удалить слово введенное пользователем. Если после удаления в предложении не останется слов, его необходимо удалить.\n2: Для каждого предложения вывести все заглавные буквы в лексикографическом порядке.\n3: Отсортировать предложения по среднему арифметическому чисел в предложении. Число - слово состоящее только из цифр.\n4: Удалить все предложения в которых нет строчных букв.");
@@ -100,6 +102,14 @@ void change(char** str, int size, int command){
         clear(text,new_size);
         clear(str, size);
     }
+    if(command == 9){
+        char** text = clear_double(str,size,&new_size);
+        char** result = task_9(text,new_size);
+        output(result,new_size);
+        clear(result ,new_size);
+        clear(text,new_size);
+        clear(str,size);
+    }
 
 }
 void output(char** str, int count_sentences){
@@ -108,6 +118,101 @@ void output(char** str, int count_sentences){
             printf("%s\n", str[i]);
         }
     }
+}
+char** task_9(char** str,int size){
+    char** result = malloc(sizeof(char*) * size);
+    
+    for(int i = 0; i< size; i++){
+        result[i] = replacement(str[i]);
+        
+    }
+    return result;
+}
+char* replacement(char* str_1){
+    int capacity = 50;
+    int len = 0;
+    char* res = malloc(sizeof(char) * capacity);
+    
+    int len_num = 0;
+    int capacity_num = 10;
+    char* number = malloc(sizeof(char) * capacity_num);
+    for(int i = 0; i < strlen(str_1); i ++){
+        
+        if(isdigit(str_1[i])){
+            len_num++;
+            if(len_num >= capacity_num){
+                capacity = capacity * 1.5;
+                number = realloc(number, capacity);
+            }
+            number[len_num - 1] = *(str_1 + i);
+            
+        }
+        else{
+            if(strlen(number) > 0){
+                number[len_num] = '\0';
+                printf("%s",number);
+                char* n = bin(number);
+        
+                for(int j = 0; j < strlen(n); j++){
+                    len++;
+                    if(len >= capacity){
+                        capacity = capacity * 1.5;
+                        res = realloc(res, capacity);
+                    }
+                    res[len - 1] = n[j]; 
+                }
+                free(number);
+                len_num = 0;
+                capacity_num = 10;
+                char* number = malloc(sizeof(char) * capacity_num);
+                
+            }
+            else{
+                len++;
+                if(len >= capacity){
+                        capacity = capacity * 1.5;
+                        res = realloc(res, capacity);
+                    }
+                res[len - 1] = str_1[i];
+            }
+            
+        }
+    
+    res[len] = '\0';
+    return res;
+
+
+    }
+}
+char* bin(char* num){
+    int capacity = 10;
+    char* res = malloc(sizeof(char) * 3);
+    res[0] = '0';
+    res[1] = 'b';
+
+    int number = atoi(num);
+    int c = 0;
+    int idx = 0;
+    char* text = malloc(sizeof(char) * capacity);
+    while(number > 0){
+        c = number % 2;
+        idx ++;
+        text[idx - 1] = c + '0';
+        if(idx >= capacity){
+            capacity = capacity * 1.5;
+            text = realloc(text,capacity);
+        }
+        number = number / 2; 
+    }
+    text[idx] = '\0';
+    res = realloc(res, sizeof(char) * (strlen(text) + 4));
+    int index = 2;
+    for(int i = strlen(text) - 1;i >= 0;i--){
+        index ++;
+        res[index - 1] = text[i];
+    }
+    res[index] = '\0';
+    return res;
 }
 char** task_1(char** str, int size){
     char* word = NULL;
@@ -376,54 +481,27 @@ char* createLowerCaseArray(int size, char* str){
 
     
 char* removeWord(char* str, char* word) {
-
+    char arr[strlen(str)];
+    for(int i = 0;i < strlen(str);i++){
+        if(str[i] != '.')
+            arr[i] = *(str + i);
+    }
+    char sep[10] = " ";
     char* result = malloc(sizeof(char) * strlen(str) + 1);
     int idx = 0;
-
-    
-    
-    int capacity = 10;
-    char* add_word = malloc(sizeof(char) * capacity);
-    int len_word = 0;
-
-    for(int i = 0;i < strlen(str);i++){
-
-        if(str[i] == ' ' || str[i] == ',' || str[i] == '.'){
-            if(add_word != NULL){
-                add_word[len_word] = '\0';
-                if(strcmp(add_word, word) != 0){
-                    for(int j = 0; j < strlen(add_word); j++){
-                        result[idx++] = *(add_word + j);
-                    }
+    arr[strlen(str) - 1] = '\0';
+    char *token = strtok(arr, sep);
+    while(token != NULL){
+            if(strcmp(token, word) != 0){
+                for(int i = 0; i < strlen(token); i++){
+                        result[idx++] = token[i];    
                 }
-                free(add_word);
-                capacity = 10;
-                add_word = malloc(sizeof(char) * capacity);
-                len_word = 0;
+                result[idx++] = ' ';
+
             }
-            result[idx++] = *(str + i);
-        }
-        
-        else if(isalpha(str[i])){
-            len_word++;
-            if(len_word >= capacity)
-            {
-                capacity = capacity * 1.5;
-                add_word = realloc(add_word, sizeof(char) * capacity);
-            }
-            add_word[len_word - 1] = *(str + i);
-
-
-
-        }
-
-
+            token = strtok(NULL, sep);
 
     }
-
-
-
-
  
     if(idx){
         result[idx - 1] = '.';
