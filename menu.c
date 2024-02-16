@@ -42,6 +42,8 @@ int count(char* str){
 
     int number = 0;
 
+    int count_s = 0;
+
     for(int i = 0; i < strlen(str);i++){
 
         
@@ -51,21 +53,21 @@ int count(char* str){
             word = realloc(word, sizeof(char) * (++idx));
 
             word[idx - 1] = str[i];
-
+            count_s = 0;
             
 
         }
 
 
 
-        if((str[i] == ' ' && i > 0) || i == strlen(str) - 1){
+        if((str[i] == ' ' && i > 0 && count_s == 0) || i == strlen(str) - 1){
 
             word = realloc(word, sizeof(char) * ((++idx) ));
 
  
 
             word[idx - 1] = '\0';
-
+            count_s = 1;
 
 
             
