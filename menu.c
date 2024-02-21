@@ -3,20 +3,22 @@
 #include <dirent.h>
 #include <string.h>
 #include<ctype.h>
-void printFile(char* filename, char* name_command){
+
+#define IF_dir de->d_type == DT_DIR && strcmp(de->d_name, ".") && strcmp(de->d_name, "..")
+int readFile(char* filename, char* name_command){
     int res = 0;
 
-   // if(strcmp(name_command, "mul") == 0)
-   //     res = 1;
+    if(strcmp(name_command, "mul") == 0)
+        res = 1;
 
     FILE *f = fopen(filename, "r");
 
     if(!f)
-        return;
-    printf("filename : %s:\n", filename);
+        return 0;
+    
     char s[100];
     while(fgets(s,100,f)){
-        printf("\t%s: ",s);
+
         char num[10];
         int size = 0;
         for(int i = 0; i < strlen(s); i ++){
@@ -26,67 +28,69 @@ void printFile(char* filename, char* name_command){
             }
             if(s[i] == ' ' || i == strlen(s) - 1){
                 num[size] = '\0';
-                if(strcmp(name_command, "add") == 0){
+                if(strcmp(name_command, "add") == 0)
                     res += atoi(num);
-                }
-                else if(strcmp(name_command, "mul") == 0){
+                else if(strcmp(name_command, "mul") == 0)
                     res *= atoi(num);
-                }
+                
                 
                 size = 0;
             }
         }
     }
     fclose(f);
-    printf("%d\n", res);
-
+    
+    return res;
 
 }
-void listDir(char* startDir, char* name_command){
+int listDir(char* startDir, char* name_command){
+    int result = 0;
+        if(strcmp(name_command, "mul") == 0)
+        result = 1;
     char next[200] = {0};
     strcpy(next, startDir);
     DIR *dir = opendir(startDir);
     if(!dir)
-        return;
+        return 0;
 
     struct dirent *de = readdir(dir);
 
     while(de){
-        if(de->d_type == DT_DIR && strcmp(de->d_name, ".")
-         && strcmp(de->d_name, ".."))
-            strcpy(name_command,de->d_name);
-            name_command[4] = '\0';
 
-        if(de->d_type == DT_REG)
-            printf("de->d_name: %s\n", de->d_name);
-        if(de->d_type == DT_DIR && strcmp(de->d_name, ".")
-         && strcmp(de->d_name, ".."))
+        if(IF_dir)
         {
             int len = strlen(next);
             strcat(next, "/");
             strcat(next, de->d_name);
-            listDir(next, name_command);
+            if(name_command != NULL && strcmp(name_command, "add") == 0)
+                result += listDir(next, de->d_name);
+            else if(name_command != NULL && strcmp(name_command, "mul") == 0)
+                result *= listDir(next, de->d_name);
+            else
+                result = listDir(next, de->d_name);
             next[len] = '\0';  
         }
         if(de->d_type == DT_REG){
             int len = strlen(next);
             strcat(next, "/");
             strcat(next, de->d_name);
-            printFile(next, name_command);
+            if(name_command != NULL && strcmp(name_command, "add") == 0)
+                result += readFile(next, name_command);
+            else if(name_command != NULL && strcmp(name_command, "mul") == 0)
+                result *= readFile(next, name_command);
             next[len] = '\0';  
         }
         de = readdir(dir);
     }
     closedir(dir);
-
+    return result;
 }
 
 
 
 int main(){
-    char* name_command = malloc(4 * sizeof(char));
 
-    listDir("..\\..\\root", name_command);
+    printf("%d\n",listDir("..\\..\\root", NULL));
 
     return 0;
 }
