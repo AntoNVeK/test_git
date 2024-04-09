@@ -1,51 +1,25 @@
-all: exe
-
-exe: solution.c
-	gcc solution.c -fPIC -ldl -o solution
-
-
-clean:
-	-rm solution
-
-
-
-
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <dlfcn.h>
 #include <string.h>
-#include <stdlib.h>
-
-int main(int argc, char *argv[]) {
-    if(argc < 4) {
-        printf("Usage: %s <library> <function> <argument>\n", argv[0]);
-        return 1;
-    }
-
-    const char *libname = strcat("./", argv[1]);
-    const char *funcname = argv[2];
-    int arg = atoi(argv[3]);
-
-    void *lib = dlopen(libname, RTLD_LAZY);
-    if(lib == NULL) {
-        fprintf(stderr, "Error loading library: %s\n", dlerror());
-        return 1;
-    }
-
-    int (*func)(int) = dlsym(lib, funcname);
-    if(func == NULL) {
-        fprintf(stderr, "Error finding function: %s\n", dlerror());
-        dlclose(lib);
-        return 1;
-    }
-
-    int result = func(arg);
-    printf("%d\n", result);
-
-    dlclose(lib);
-    return 0;
-}
-
-
-
-
+int main(int argc, char *argv[])
+{ 
+    if (argc != 4) { 
+        fprintf(stderr, "Usage: %s lib_name func_name arg\n", argv[0]); 
+        return 1; }
+    const char *lib_name = strcat("./",argv[1]); 
+    const char *func_name = argv[2]; 
+    int arg = atoi(argv[3]); 
+    void *handle = dlopen(lib_name, RTLD_LAZY); 
+    if (!handle) { 
+        fprintf(stderr, "Error loading library: %s\n", dlerror()); 
+        return 1; } 
+    int (*func)(int); 
+    *(void **) (&func) = dlsym(handle, func_name); 
+    if (!func) { 
+        fprintf(stderr, "Error getting function pointer: %s\n", dlerror()); 
+        dlclose(handle); 
+        return 1; } 
+    int result = func(arg); printf("%d\n", result); 
+    dlclose(handle);
+    return 0; }
