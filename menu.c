@@ -1,25 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <dlfcn.h>
 #include <string.h>
-int main(int argc, char *argv[])
-{ 
-    if (argc != 4) { 
-        fprintf(stderr, "Usage: %s lib_name func_name arg\n", argv[0]); 
-        return 1; }
-    const char *lib_name = strcat("./",argv[1]); 
-    const char *func_name = argv[2]; 
-    int arg = atoi(argv[3]); 
-    void *handle = dlopen(lib_name, RTLD_LAZY); 
-    if (!handle) { 
-        fprintf(stderr, "Error loading library: %s\n", dlerror()); 
-        return 1; } 
-    int (*func)(int); 
-    *(void **) (&func) = dlsym(handle, func_name); 
-    if (!func) { 
-        fprintf(stderr, "Error getting function pointer: %s\n", dlerror()); 
-        dlclose(handle); 
-        return 1; } 
-    int result = func(arg); printf("%d\n", result); 
-    dlclose(handle);
-    return 0; }
+#include <getopt.h>
+
+
+int* parsing_args(char* str){	 
+	if(str == NULL){
+  		printf("String is empty\n");
+  		exit(0);
+	}
+	int idx = 0;
+	int* array = malloc(3 * sizeof(int));
+	int temp = 0;
+	int place_number = 1;
+
+	for(int i = strlen(str); i >= 0; i++){
+  		if(str[i] == '.'){
+			array[idx] = temp;
+			idx++;
+			temp = 0;
+			place_number = 1;
+  		} else {
+			temp += str[i] * place_number;
+			place_number *= 10;
+  		}
+	}
+
+	return array;
+}
+
+int main(){
+
+    char* str = "255.0.0";
+    int* arr = parsing_args(str);
+
+    for(int i = 0; i < 3; i++){
+        printf("%d\n", arr[i]);
+    }
+
+
+
+    return 0;
+}
