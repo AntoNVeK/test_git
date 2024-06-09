@@ -45,26 +45,26 @@ int* parsing_args(char* str){
 #pragma pack (push, 1)
 typedef struct BitmapFileHeader
 {
-    unsigned short signature;    // определение типа файла
-    unsigned int filesize;       // размер файла
-    unsigned short reserved1;    // должен быть 0
-    unsigned short reserved2;    // должен быть 0
-    unsigned int pixelArrOffset; // начальный адрес байта, в котором находятся данные изображения (массив пикселей)
+    unsigned short signature;    // Г®ГЇГ°ГҐГ¤ГҐГ«ГҐГ­ГЁГҐ ГІГЁГЇГ  ГґГ Г©Г«Г 
+    unsigned int filesize;       // Г°Г Г§Г¬ГҐГ° ГґГ Г©Г«Г 
+    unsigned short reserved1;    // Г¤Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 0
+    unsigned short reserved2;    // Г¤Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 0
+    unsigned int pixelArrOffset; // Г­Г Г·Г Г«ГјГ­Г»Г© Г Г¤Г°ГҐГ± ГЎГ Г©ГІГ , Гў ГЄГ®ГІГ®Г°Г®Г¬ Г­Г ГµГ®Г¤ГїГІГ±Гї Г¤Г Г­Г­Г»ГҐ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї (Г¬Г Г±Г±ГЁГў ГЇГЁГЄГ±ГҐГ«ГҐГ©)
 } BitmapFileHeader;
 
 typedef struct BitmapInfoHeader
 {
-    unsigned int headerSize;          // размер этого заголовка в байтах
-    unsigned int width;               // ширина изображения в пикселях
-    unsigned int height;              // высота изображения в пикселях
-    unsigned short planes;            // кол-во цветовых плоскостей (должно быть 1)
-    unsigned short bitsPerPixel;      // глубина цвета изображения
-    unsigned int compression;         // тип сжатия; если сжатия не используется, то здесь должен быть 0
-    unsigned int imageSize;           // размер изображения
-    unsigned int xPixelsPerMeter;     // горизонтальное разрешение (пиксель на метр)
-    unsigned int yPixelsPerMeter;     // вертикальное разрешение (пиксель на метр)
-    unsigned int colorsInColorTable;  // кол-во цветов в цветовой палитре
-    unsigned int importantColorCount; // кол-во важных цветов (или 0, если каждый цвет важен)
+    unsigned int headerSize;          // Г°Г Г§Г¬ГҐГ° ГЅГІГ®ГЈГ® Г§Г ГЈГ®Г«Г®ГўГЄГ  Гў ГЎГ Г©ГІГ Гµ
+    unsigned int width;               // ГёГЁГ°ГЁГ­Г  ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї Гў ГЇГЁГЄГ±ГҐГ«ГїГµ
+    unsigned int height;              // ГўГ»Г±Г®ГІГ  ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї Гў ГЇГЁГЄГ±ГҐГ«ГїГµ
+    unsigned short planes;            // ГЄГ®Г«-ГўГ® Г¶ГўГҐГІГ®ГўГ»Гµ ГЇГ«Г®Г±ГЄГ®Г±ГІГҐГ© (Г¤Г®Г«Г¦Г­Г® ГЎГ»ГІГј 1)
+    unsigned short bitsPerPixel;      // ГЈГ«ГіГЎГЁГ­Г  Г¶ГўГҐГІГ  ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї
+    unsigned int compression;         // ГІГЁГЇ Г±Г¦Г ГІГЁГї; ГҐГ±Г«ГЁ Г±Г¦Г ГІГЁГї Г­ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї, ГІГ® Г§Г¤ГҐГ±Гј Г¤Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј 0
+    unsigned int imageSize;           // Г°Г Г§Г¬ГҐГ° ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї
+    unsigned int xPixelsPerMeter;     // ГЈГ®Г°ГЁГ§Г®Г­ГІГ Г«ГјГ­Г®ГҐ Г°Г Г§Г°ГҐГёГҐГ­ГЁГҐ (ГЇГЁГЄГ±ГҐГ«Гј Г­Г  Г¬ГҐГІГ°)
+    unsigned int yPixelsPerMeter;     // ГўГҐГ°ГІГЁГЄГ Г«ГјГ­Г®ГҐ Г°Г Г§Г°ГҐГёГҐГ­ГЁГҐ (ГЇГЁГЄГ±ГҐГ«Гј Г­Г  Г¬ГҐГІГ°)
+    unsigned int colorsInColorTable;  // ГЄГ®Г«-ГўГ® Г¶ГўГҐГІГ®Гў Гў Г¶ГўГҐГІГ®ГўГ®Г© ГЇГ Г«ГЁГІГ°ГҐ
+    unsigned int importantColorCount; // ГЄГ®Г«-ГўГ® ГўГ Г¦Г­Г»Гµ Г¶ГўГҐГІГ®Гў (ГЁГ«ГЁ 0, ГҐГ±Г«ГЁ ГЄГ Г¦Г¤Г»Г© Г¶ГўГҐГІ ГўГ Г¦ГҐГ­)
 } BitmapInfoHeader;
 
 typedef struct Rgb
