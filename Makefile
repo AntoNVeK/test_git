@@ -1,10 +1,6 @@
-all: exe lib
+CC=gcc
 
-exe: solution.c
-	gcc solution.c -fPIC -ldl -o solution -Wl,-rpath=.
+all: exe
 
-lib: func.c
-	gcc -shared func.c -fPIC -o libmain.so
-
-clean:
-	-rm solution libmain.so
+exe: cw2.c
+	$(CC) cw2.c -o cw -lm
