@@ -55,74 +55,75 @@ class LinkedList:
             node_number += 1
 
     def pop(self, index):
-        if index < 0 or index > self.count_elements:
+        if index < 0 or index >= self.count_elements:
             raise IndexError("Linked List out of range")
-        if self.size_node != calculate_optimal_node_size(self.count_elements - 1):
+        self.count_elements -= 1
+        flag = 0
+        size = calculate_optimal_node_size(self.count_elements)
+        if self.size_node != size:
+            self.size_node = size
+            flag = 1
 
-            current = self.head
-
-            i = 0
-
-            arr = []
-            while current:
-                for j in current.elements:
-                    if i != index:
-                        arr.append(j)
-                    i += 1
-                current = current.next
-            if arr:
-                self.create_linked_list(arr)
+        if index == 0:
+            if len(self.head.elements) > 1:
+                self.head.elements.pop(0)
+            elif self.head.next:
+                self.head = self.head.next
             else:
                 self.head = None
 
-        else:
-
-            i = 0
-
-            penultimate_node = None
-
-            flag = 1
-
+        elif index == self.count_elements:
             current = self.head
+            penultimate = None
+            while current.next:
 
-            while current:
+                if current and current.next and not current.next.next:
+                    penultimate = current
 
-                for j in range(len(current.elements)):
-
-                    if i == index and flag:
-                        flag = 0
-
-                        if j == len(current.elements) - 1 and current.next:
-                            current.elements[j] = current.next.elements[0]
-
-
-
-                        elif j == len(current.elements) - 1:
-                            current.elements = current.elements[:-1]
-
-                        else:
-                            current.elements[j] = current.elements[j + 1]
-
-                    elif flag == 0:
-                        if j == len(current.elements) - 1 and current.next:
-                            current.elements[j] = current.next.elements[0]
-
-                        elif j == len(current.elements) - 1:
-                            current.elements = current.elements[:-1]
-
-                        else:
-                            current.elements[j] = current.elements[j + 1]
-
-                    i += 1
-                if current and current.next and current.next.next == None:
-                    penultimate_node = current
                 current = current.next
 
-            if penultimate_node and penultimate_node.next and len(penultimate_node.next.elements) == 0:
-                penultimate_node.next = None
+            if len(current.elements) - 1 == 0:
+                penultimate.next = None
+            else:
+                current.elements = current.elements[:-1]
 
-            self.count_elements -= 1
-            # self.print_linked_list()
+        else:
+            i = 0
+            current = self.head
+            previous = None
+
+            while current:
+                if i + len(current.elements) < index:
+                    i += len(current.elements)
+                    previous = current
+                    current = current.next
+                    continue
+                for j in range(len(current.elements)):
+                    if i == index:
+                        if len(current.elements) - 1 > 0:
+                            current.elements.pop(j)
+                        else:
+                            previous.next = current.next
+
+                    i += 1
+
+                previous = current
+                current = current.next
+        if flag:
+            self.balance()
+
+    def balance(self):
+        current = self.head
+
+        while current:
+            if len(current.elements) > self.size_node:
+                new_node = Node()
+                new_node.elements = current.elements[len(current.elements) // 2:]
+                new_node.next = current.next
+                current.elements = current.elements[:len(current.elements) // 2]
+                current.next = new_node
+
+            current = current.next
 
     def search(self, el):
         index = 0
@@ -142,57 +143,79 @@ class LinkedList:
         if index < 0 or index > self.count_elements:
             raise IndexError("Linked List out of range")
 
-        if self.size_node != calculate_optimal_node_size(self.count_elements + 1):
-            current = self.head
-            arr = []
+        self.count_elements += 1
+        self.size_node = calculate_optimal_node_size(self.count_elements)
+        if index == 0:
+            if self.head and len(self.head.elements) < self.size_node:
+                self.head.elements.insert(0, element)
 
-            while current:
-                arr += current.elements
+
+            elif self.head == None:
+                self.head = Node()
+                self.head.elements.append(element)
+
+            else:
+                new_node = Node()
+                new_node.elements = self.head.elements[:len(self.head.elements) // 2]
+                new_node.elements.insert(0, element)
+
+                self.head.elements = self.head.elements[len(self.head.elements) // 2:]
+                current = self.head
+                new_node.next = current
+                self.head = new_node
+
+
+        elif index == self.count_elements - 1:
+            current = self.head
+
+            while current.next:
                 current = current.next
 
-            arr.insert(index, element)
+            if len(current.elements) < self.size_node:
+                current.elements.append(element)
 
-            self.create_linked_list(arr)
+            else:
+                new_node = Node()
+                new_node.elements = current.elements[(len(current.elements) // 2 + 1):]
+                new_node.elements.append(element)
+
+                current.elements = current.elements[:(len(current.elements) // 2 + 1)]
+                current.next = new_node
+
         else:
             i = 0
 
             current = self.head
 
-            flag = 1
-            last_node = None
-            previous = None
-
             while current:
+                if i + len(current.elements) < index:
+                    i += len(current.elements)
+                    current = current.next
+                    continue
 
                 for j in range(len(current.elements)):
-                    if i == index and flag:
-                        flag = 0
-                        previous = current.elements[j]
-                        current.elements[j] = element
+                    if i == index:
 
-                    elif flag == 0:
-                        el = current.elements[j]
-                        current.elements[j] = previous
-                        previous = el
+                        if len(current.elements) + 1 <= self.size_node:
+                            current.elements.insert(j, element)
+
+                        else:
+
+                            current.elements.insert(j, element)
+                            right_elements = current.elements[len(current.elements) // 2:]
+                            current.elements = current.elements[:len(current.elements) // 2]
+
+                            next_node = current.next
+
+                            new_node = Node()
+                            new_node.elements = right_elements
+
+                            current.next = new_node
+                            new_node.next = next_node
+
                     i += 1
 
-                if current != None and current.next == None:
-                    last_node = current
                 current = current.next
-
-            if not previous:
-                previous = element
-
-            if last_node and len(last_node.elements) < self.size_node:
-                last_node.elements.append(previous)
-
-            elif last_node:
-                new_node = Node()
-                new_node.elements.append(previous)
-                last_node.next = new_node
-
-            self.count_elements += 1
-        # self.print_linked_list()
 
     def search_element(self, index) -> int:
 
@@ -204,6 +227,10 @@ class LinkedList:
         current = self.head
 
         while current:
+            if i + len(current.elements) < index:
+                i += len(current.elements)
+                current = current.next
+                continue
             for j in range(len(current.elements)):
 
                 if i == index:
@@ -225,7 +252,3 @@ def check(arr1, arr2, n_array=[]):
         print("______________")
 
 
-linked_list = LinkedList()
-linked_list.create_linked_list([100, 200, 300])
-
-print(linked_list.search_element(2))
