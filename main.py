@@ -16,7 +16,7 @@ class Node:
         self.next = next
 
 
-class LinkedList:
+class ExpandedLinkedList:
     def __init__(self, size_node=0, count_elements=0, elements=[]):
         self.head = None
         self.size_node = size_node
@@ -93,22 +93,19 @@ class LinkedList:
             previous = None
 
             while current:
-                if i + len(current.elements) < index:
+                if i + len(current.elements) <= index:
                     i += len(current.elements)
                     previous = current
                     current = current.next
                     continue
-                for j in range(len(current.elements)):
-                    if i == index:
-                        if len(current.elements) - 1 > 0:
-                            current.elements.pop(j)
-                        else:
-                            previous.next = current.next
 
-                    i += 1
+                if len(current.elements) - 1 > 0:
+                    current.elements.pop(index - i)
+                    break
+                else:
+                    previous.next = current.next
+                    break
 
-                previous = current
-                current = current.next
         if flag:
             self.balance()
 
@@ -125,16 +122,15 @@ class LinkedList:
 
             current = current.next
 
-    def search(self, el):
+    def find(self, el):
         index = 0
 
         current = self.head
 
         while current:
-            for i in range(len(current.elements)):
-                if current.elements[i] == el:
-                    return index
-                index += 1
+            if el in current.elements:
+                return index + current.elements.index(el)
+            index += len(current.elements)
 
             current = current.next
         return -1
@@ -193,29 +189,24 @@ class LinkedList:
                     current = current.next
                     continue
 
-                for j in range(len(current.elements)):
-                    if i == index:
+                if len(current.elements) + 1 <= self.size_node:
+                    current.elements.insert(index - i, element)
+                    break
 
-                        if len(current.elements) + 1 <= self.size_node:
-                            current.elements.insert(j, element)
+                else:
 
-                        else:
+                    current.elements.insert(index - i, element)
+                    right_elements = current.elements[len(current.elements) // 2:]
+                    current.elements = current.elements[:len(current.elements) // 2]
 
-                            current.elements.insert(j, element)
-                            right_elements = current.elements[len(current.elements) // 2:]
-                            current.elements = current.elements[:len(current.elements) // 2]
+                    next_node = current.next
 
-                            next_node = current.next
+                    new_node = Node()
+                    new_node.elements = right_elements
 
-                            new_node = Node()
-                            new_node.elements = right_elements
-
-                            current.next = new_node
-                            new_node.next = next_node
-
-                    i += 1
-
-                current = current.next
+                    current.next = new_node
+                    new_node.next = next_node
+                    break
 
     def search_element(self, index) -> int:
 
@@ -241,7 +232,7 @@ class LinkedList:
 
 
 def check(arr1, arr2, n_array=[]):
-    linked_list = LinkedList()
+    linked_list = ExpandedLinkedList()
     linked_list.create_linked_list(arr1)
 
     for i in arr2:
@@ -250,5 +241,3 @@ def check(arr1, arr2, n_array=[]):
         if index != -1:
             linked_list.pop(index)
         print("______________")
-
-
