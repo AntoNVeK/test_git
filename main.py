@@ -17,7 +17,7 @@ class Node:
 
 
 class ExpandedLinkedList:
-    def __init__(self, size_node=0, count_elements=0, elements=[]):
+    def __init__(self, elements=[], size_node=16, count_elements=0):
         self.head = None
         self.size_node = size_node
         self.count_elements = count_elements
@@ -58,15 +58,14 @@ class ExpandedLinkedList:
         if index < 0 or index >= self.count_elements:
             raise IndexError("Linked List out of range")
         self.count_elements -= 1
-        flag = 0
-        size = calculate_optimal_node_size(self.count_elements)
-        if self.size_node != size:
-            self.size_node = size
-            flag = 1
 
         if index == 0:
-            if len(self.head.elements) > 1:
+            if len(self.head.elements) > 2 or (len(self.head.elements) > 1 and (
+                    not self.head.next or len(self.head.next.elements) == self.size_node)):
                 self.head.elements.pop(0)
+            elif self.head.next and len(self.head.elements) > 1 and len(self.head.next.elements) < self.size_node:
+                self.head.next.elements.insert(0, self.head.elements[1])
+                self.head = self.head.next
             elif self.head.next:
                 self.head = self.head.next
             else:
@@ -84,6 +83,9 @@ class ExpandedLinkedList:
 
             if len(current.elements) - 1 == 0:
                 penultimate.next = None
+            elif len(penultimate.elements) < self.size_node and len(current.elements) - 1 == 1:
+                penultimate.elements.append(current.elements[0])
+                penultimate.next = None
             else:
                 current.elements = current.elements[:-1]
 
@@ -99,28 +101,29 @@ class ExpandedLinkedList:
                     current = current.next
                     continue
 
-                if len(current.elements) - 1 > 0:
+                if len(current.elements) > 2:
+                    current.elements.pop(index - i)
+                    break
+                # 1 2
+                elif previous and len(previous.elements) < self.size_node and len(current.elements) == 2:
+                    current.elements.pop(index - i)
+                    previous.elements.append(current.elements[0])
+                    previous.next = current.next
+                    break
+                elif current.next and len(current.next.elements) < self.size_node and len(current.elements) == 2:
+                    current.elements.pop(index - i)
+                    current.next.elements.insert(0, current.elements[0])
+                    if previous:
+                        previous.next = current.next
+                    else:
+                        self.head = self.head.next
+                    break
+                elif (not previous and not current.next) or (previous and len(previous.elements) == self.size_node) or (current.next and len(current.next.elements) == self.size_node):
                     current.elements.pop(index - i)
                     break
                 else:
                     previous.next = current.next
                     break
-
-        if flag:
-            self.balance()
-
-    def balance(self):
-        current = self.head
-
-        while current:
-            if len(current.elements) > self.size_node:
-                new_node = Node()
-                new_node.elements = current.elements[len(current.elements) // 2:]
-                new_node.next = current.next
-                current.elements = current.elements[:len(current.elements) // 2]
-                current.next = new_node
-
-            current = current.next
 
     def find(self, el):
         index = 0
@@ -140,7 +143,7 @@ class ExpandedLinkedList:
             raise IndexError("Linked List out of range")
 
         self.count_elements += 1
-        self.size_node = calculate_optimal_node_size(self.count_elements)
+
         if index == 0:
             if self.head and len(self.head.elements) < self.size_node:
                 self.head.elements.insert(0, element)
@@ -236,8 +239,15 @@ def check(arr1, arr2, n_array=[]):
     linked_list.create_linked_list(arr1)
 
     for i in arr2:
-        index = linked_list.search(i)
+        index = linked_list.find(i)
         print(f"index: {index}")
         if index != -1:
             linked_list.pop(index)
         print("______________")
+
+
+if __name__ == '__main__':
+    linked_list = ExpandedLinkedList(range(27))
+
+
+    linked_list.print_linked_list()
