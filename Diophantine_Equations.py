@@ -3,6 +3,7 @@ def find_gcd(a, b):
         a, b = b, a % b
     return a
 
+
 def solve_diophantine(a, b, c):
     gcd_ab = find_gcd(abs(a), abs(b))
 
@@ -39,47 +40,19 @@ def solve_diophantine(a, b, c):
     x_o = b // gcd_abc
     y_o = -a // gcd_abc
 
-    str_x = str(x_ch)
+    x = str(x_ch)
     if x_o > 0:
-        str_x += " + " + str(x_o) + " * k"
+        x += " + " + str(x_o) + " * k"
     else:
-        str_x += " - " + str(abs(x_o)) + " * k"
+        x += " - " + str(abs(x_o)) + " * k"
 
-    str_y = str(y_ch)
+    y = str(y_ch)
     if y_o > 0:
-        str_y += " + " + str(y_o) + " * k"
+        y += " + " + str(y_o) + " * k"
     else:
-        str_y += " - " + str(abs(y_o)) + " * k"
-
-    print(str_x)
-    print(str_y)
-
-    k = 0
-
-    x = x_ch + x_o * k
-    y = y_ch + y_o * k
-
-    if x > 0:
-        while x > 0:
-            if x_o > 0:
-                k -= 1
-            else:
-                k += 1
-            if x_ch + x_o * k > 0:
-                x = x_ch + x_o * k
-                y = y_ch + y_o * k
-            else:
-                break
-    else:
-        while x < 0:
-            if x_o > 0:
-                k += 1
-            else:
-                k -= 1
-            x = x_ch + x_o * k
-            y = y_ch + y_o * k
-
+        y += " - " + str(abs(y_o)) + " * k"
     return x, y
+
 
 a, b, c = map(int, input().split())
 
@@ -88,5 +61,5 @@ result = solve_diophantine(a, b, c)
 if result == "Нет решений":
     print(result)
 else:
-    x0, y0 = result
-    print(f"{x0} {y0}")
+    x, y = result
+    print(x + "\n" + y)
