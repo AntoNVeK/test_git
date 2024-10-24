@@ -58,9 +58,10 @@ if __name__ == "__main__":
     a, b, c = map(int, input().split())
 
     result = solve_diophantine(a, b, c)
-    
+
     if result == "Нет решений":
         print(result)
+        
     else:
         x, y = result
         print(x + "\n" + y)
