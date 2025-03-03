@@ -1,0 +1,1674 @@
+Отчет по лабораторной работе №1
+
+ФИО: Корниенко Антон Евгеньевич
+
+группа: 3342
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ date && lscpu
+Вт 25 фев 2025 22:23:37 MSK
+Архитектура:               x86_64
+  CPU op-mode(s):          32-bit, 64-bit
+  Address sizes:           39 bits physical, 48 bits virtual
+  Порядок байт:            Little Endian
+CPU(s):                    4
+  On-line CPU(s) list:     0-3
+ID прроизводителя:         GenuineIntel
+  Имя модели:              11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+    Семейство ЦПУ:         6
+    Модель:                140
+    Потоков на ядро:       1
+    Ядер на сокет:         4
+    Сокетов:               1
+    Степпинг:              1
+    BogoMIPS:              6220.80
+    Флаги:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush 
+                           mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology n
+                           onstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2ap
+                           ic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch fsgsba
+                           se bmi1 avx2 bmi2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+Virtualisation features:   
+  Разработчик гипервизора: KVM
+  Тип виртуализации:       полный
+Caches (sum of all):       
+  L1d:                     192 KiB (4 instances)
+  L1i:                     128 KiB (4 instances)
+  L2:                      5 MiB (4 instances)
+  L3:                      32 MiB (4 instances)
+NUMA:                      
+  NUMA node(s):            1
+  NUMA node0 CPU(s):       0-3
+Vulnerabilities:           
+  Gather data sampling:    Unknown: Dependent on hypervisor status
+  Itlb multihit:           Not affected
+  L1tf:                    Not affected
+  Mds:                     Not affected
+  Meltdown:                Not affected
+  Mmio stale data:         Not affected
+  Reg file data sampling:  Not affected
+  Retbleed:                Not affected
+  Spec rstack overflow:    Not affected
+  Spec store bypass:       Vulnerable
+  Spectre v1:              Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:              Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; B
+                           HI Retpoline
+  Srbds:                   Not affected
+  Tsx async abort:         Not affected
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ uname -a
+Linux Ubuntu 6.8.0-52-generic #53~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jan 15 19:18:46 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ lshw | head -n 19
+ПРЕДУПРЕЖДЕНИЕ: эту программу нужно запускать от имени суперпользователя.
+ubuntu                      
+    описание: Computer
+    разрядность: 64 bits
+    возможности: smp vsyscall32
+  *-core
+       описание: Motherboard
+       физический ID: 0
+     *-memory
+          описание: Системная память
+          физический ID: 0
+          размер: 4GiB
+     *-cpu
+          продукт: 11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+          производитель: Intel Corp.
+          физический ID: 1
+          сведения о шине: cpu@0
+          версия: 6.140.1
+          разрядность: 64 bits
+          возможности: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp x86-64 constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch fsgsbase bmi1 avx2 bmi2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+
+Выполнение работы:
+
+1)
+Рекурсивный поиск от корневой дирректории по всем поддеррикториям производится при помощи команды ls с ключом -R
+
+"-":
+      Первый найденный файл:
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^-' | head -n 1   
+      -rw-------   1 root root 2810183680 фев 23 22:56 swapfile
+      Поиск полного пути для этого файла:
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "swapfile" 2>/dev/null | head -n 1
+      /snap/core22/1748/etc/default/swapfile
+
+"b":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^b' | head -n 1
+      brw-rw----  1 root           disk      7,   0 фев 25 20:45 loop0
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "loop0" 2>/dev/null | head -n 1
+      /sys/class/block/loop0
+
+"c":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^c' | head -n 1
+      crw-r--r--  1 root           root     10, 235 фев 25 20:45 autofs
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "autofs" 2>/dev/null | head -n 1
+      /usr/lib/modules/6.8.0-52-generic/kernel/fs/autofs
+
+"d":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^d' | head -n 1
+      drwxr-xr-x   4 root root       4096 фев 25 21:13 boot
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "boot" 2>/dev/null | head -n 1
+      /boot
+
+"l":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^l' | head -n 1
+      lrwxrwxrwx   1 root root          7 фев 23 22:56 bin -> usr/bin
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "bin" 2>/dev/null | head -n 1
+      /usr/local/bin
+
+"p":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^p' | head -n 1
+      prw-------  1 root              root       0 фев 25 20:39 initctl
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "initctl" 2>/dev/null | head -n 1
+      /run/initctl
+
+"s":
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -lR / 2>/dev/null | grep '^s' | head -n 1
+      srw-rw-rw-  1 root              root       0 фев 25 20:39 acpid.socket
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -name "acpid.socket" 2>/dev/null | head -n 1
+      /var/lib/systemd/deb-systemd-helper-enabled/sockets.target.wants/acpid.socket
+
+
+
+Скрипт:
+      antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 1.sh 
+      #!/bin/bash
+
+      # Проверяем, был ли передан аргумент с именем файла
+      if [ -z "$1" ]; then
+          echo "Пожалуйста, укажите имя выходного файла."
+          exit 1
+      fi
+
+      output_file="$1"
+
+      # Очищаем выходной файл
+      > "$output_file"
+  
+      # Функция для поиска и записи первого найденного файла определённого типа
+      find_and_write() {
+          type=$1
+          description=$2
+          result=$(ls -lR / 2>/dev/null | grep "^$type" | head -n 1)
+          if [ -n "$result" ]; then
+              file_name=$(echo "$result" | awk '{print $NF}')
+              if [ "$type" == "l" ]; then
+                  # Для символьных ссылок извлекаем директорию и целевой путь
+                  link_path=$(echo "$result" | awk '{print $9}')
+                  target_path=$(echo "$result" | awk '{print $11}')
+                  # Если путь относительный, объединяем с директорией ссылки
+                  if [[ "$target_path" != /* ]]; then
+                      full_path=$(dirname "$link_path")/$target_path
+                      full_path=$(readlink -f "/$full_path")
+                  else
+                      full_path=$(readlink -f "/$target_path")
+                  fi
+              else
+                  # Для остальных типов используем find
+                  full_path=$(find / -name "$file_name" 2>/dev/null | head -n 1)
+              fi
+              if [ -n "$full_path" ]; then
+                  echo "$description:" >> "$output_file"
+                  echo "$result" >> "$output_file"
+                  echo "Полный путь: $full_path" >> "$output_file"
+                  echo "" >> "$output_file"
+              else
+                  echo "$description: не удалось найти полный путь" >> "$output_file"
+              fi
+          else
+              echo "$description: не найдено" >> "$output_file"
+          fi
+      }
+
+      # Поиск и запись файлов каждого типа
+      find_and_write '-' "Обычный файл"
+      find_and_write 'b' "Блочное устройство"
+      find_and_write 'c' "Символьное устройство"
+      find_and_write 'd' "Директория"
+      find_and_write 'l' "Символьная ссылка"
+      find_and_write 'p' "FIFO"
+      find_and_write 's' "Сокет"
+
+      echo "Результаты сохранены в файл: $output_file"
+
+
+2)
+
+Создадим файл:
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ echo "Это содержимое исходного файла." > original_file.txt
+
+Создадим 3 жёсткие ссылки:
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ln original_file.txt hardlink1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ln original_file.txt hardlink2.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ln original_file.txt ~/labs/hardlink2.txt
+
+Скрипт:
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 2.sh
+#!/bin/bash
+
+# Проверка наличия аргумента
+if [ -z "$1" ]; then
+    echo "Использование: $0 <файл>"
+    exit 1
+fi
+
+# Проверка существования файла
+if [ ! -e "$1" ]; then
+    echo "Ошибка: файл $1 не существует."
+    exit 1
+fi
+
+# Получаем inode заданного файла
+inode=$(ls -i "$1" | awk '{print $1}')
+
+# Проверяем, найден ли inode
+if [ -z "$inode" ]; then
+    echo "Ошибка: не удалось получить inode для файла $1"
+    exit 1
+fi
+
+echo "Ищем жёсткие ссылки на файл $1 (inode: $inode)..."
+
+# Рекурсивный поиск файлов с тем же inode в домашней директории
+ls -liR ~ 2>/dev/null | awk -v inode="$inode" '
+    # Если строка начинается с пути, сохраняем его
+    /^\// {
+        dir = $0
+        sub(/:$/, "", dir)  # Убираем двоеточие в конце
+    }
+    # Если строка содержит inode, выводим полный путь
+    $1 == inode {
+        print dir "/" $NF
+    }
+'
+
+Проверка работоспособности:
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./2.sh original_file.txt 
+Ищем жёсткие ссылки на файл original_file.txt (inode: 925368)...
+/home/antonkornienko/labs/hardlink2.txt
+/home/antonkornienko/labs/Kornienko_Anton_min_lb1/hardlink1.txt
+/home/antonkornienko/labs/Kornienko_Anton_min_lb1/hardlink2.txt
+/home/antonkornienko/labs/Kornienko_Anton_min_lb1/original_file.txt
+
+3)
+
+Создаём исходный файл, на который все остальные будут ссылаться
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -il
+итого 8
+924691 -rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+925347 -rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ touch some_file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -il
+итого 8
+924691 -rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+925347 -rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+920884 -rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:33 some_file.txt
+
+Создание при помощи ln с флагом -s
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ln -s some_file.txt ln_file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -il
+итого 8
+924691 -rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+925347 -rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+920897 lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+920884 -rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:33 some_file.txt
+
+Создание при помощи cp с флагом -s
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cp -s some_file.txt cp_file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -il
+итого 8
+924691 -rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+925347 -rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+920900 lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:39 cp_file.txt -> some_file.txt
+920897 lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+920884 -rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:33 some_file.txt
+
+Создать символьную ссылку при помощи link нельзя, она создаёт только жёсткие ссылки.
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 3.sh 
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Использование: $0 <путь_к_файлу>"
+    exit 1
+fi
+
+# Получаем полный путь к целевому файлу
+target=$(readlink -f "$1")
+
+# Проверяем, существует ли указанный файл
+if [ ! -e "$target" ]; then
+    echo "Ошибка: Файл '$1' не существует!"
+    exit 2
+fi
+
+echo "Поиск всех символьных ссылок на файл: $target"
+
+# Ищем символические ссылки по всей файловой системе (ограничим поиск, например, /home)
+links=$(find /home -type l 2>/dev/null | while read -r link; do
+    # Проверяем, куда указывает символическая ссылка
+    resolved=$(readlink -f "$link" 2>/dev/null)
+    if [ "$resolved" == "$target" ]; then
+        echo "Символическая ссылка найдена: $link"
+    fi
+done)
+
+# Подсчитываем количество найденных ссылок
+count=$(echo "$links" | wc -l)
+
+# Выводим результат
+echo "Найдено $count символьных ссылок:"
+echo "$links"
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./3.sh some_file.txt
+Поиск всех символьных ссылок на файл: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/some_file.txt
+Найдено 2 символьных ссылок:
+Символическая ссылка найдена: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/ln_file.txt
+Символическая ссылка найдена: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/cp_file.txt
+
+4)
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -li
+итого 12
+924691 -rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+925347 -rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+920926 -rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 3.sh
+920900 lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:39 cp_file.txt -> some_file.txt
+920897 lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+920945 -rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:47 sim_links.txt
+920884 -rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:33 some_file.txt
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 3.sh 
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Использование: $0 <путь_к_файлу>"
+    exit 1
+fi
+
+# Получаем полный путь к целевому файлу
+target=$(readlink -f "$1")
+
+# Проверяем, существует ли указанный файл
+if [ ! -e "$target" ]; then
+    echo "Ошибка: Файл '$1' не существует!"
+    exit 2
+fi
+
+echo "Поиск всех символьных ссылок на файл: $target"
+
+# Ищем символические ссылки по всей файловой системе (ограничим поиск, например, /home)
+links=$(find /home -type l 2>/dev/null | while read -r link; do
+    # Проверяем, куда указывает символическая ссылка
+    resolved=$(readlink -f "$link" 2>/dev/null)
+    if [ "$resolved" == "$target" ]; then
+        echo "Символическая ссылка найдена: $link"
+    fi
+done)
+
+# Подсчитываем количество найденных ссылок
+count=$(echo "$links" | wc -l)
+
+# Выводим результат
+echo "Найдено $count символьных ссылок:"
+echo "$links"
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./3.sh some_file.txt
+Поиск всех символьных ссылок на файл: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/some_file.txt
+Найдено 2 символьных ссылок:
+Символическая ссылка найдена: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/ln_file.txt
+Символическая ссылка найдена: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/cp_file.txt
+
+5)
+
+Флаг -name, которая помогает искать файлы определённого имени или удовлетворяющих регулярному выражению
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls 1
+1_pdf.pdf  1.txt  2_pdf.pdf  2.txt  3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find ./1 -name "*.txt"
+./1/3.txt
+./1/2.txt
+./1/1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find ./1 -name "*.pdf"
+./1/1_pdf.pdf
+./1/2_pdf.pdf
+
+Поиск файлов определённого типа, при помощи -type
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find ./1 -type f
+./1/3.txt
+./1/1_pdf.pdf
+./1/2.txt
+./1/1.txt
+./1/2_pdf.pdf
+
+Поиск по размеру файла
+
+Ключ: -size
+
++100M — файлы больше 100 МБ.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -size +100M 2>/dev/null
+/var/lib/snapd/snaps/gnome-3-38-2004_143.snap
+/var/lib/snapd/snaps/code_184.snap
+/var/lib/snapd/snaps/gnome-42-2204_120.snap
+/var/lib/snapd/snaps/firefox_5783.snap
+/var/lib/snapd/snaps/firefox_2987.snap
+/var/lib/snapd/seed/snaps/gnome-3-38-2004_143.snap
+/var/lib/snapd/seed/snaps/gnome-42-2204_120.snap
+/var/lib/snapd/seed/snaps/firefox_2987.snap
+/usr/lib/x86_64-linux-gnu/libLLVM-15.so.1
+/usr/lib/thunderbird/libxul.so
+/proc/kcore
+/snap/firefox/2987/usr/lib/firefox/libxul.so
+/snap/firefox/5783/usr/lib/firefox/libxul.so
+/snap/gnome-42-2204/120/usr/lib/x86_64-linux-gnu/libLLVM-15.so.1
+/snap/code/184/usr/share/code/code
+/opt/google/chrome/chrome
+/home/antonkornienko/Downloads/google-chrome-stable_current_amd64.deb
+/home/antonkornienko/google-chrome-stable_current_amd64.deb
+/swapfile
+
+
+Поиск по времени изменения
+
+поиск всех файлов измененных за последний 1 день
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find /home -mtime -1 | head -n 10
+/home/antonkornienko
+/home/antonkornienko/.bash_history
+/home/antonkornienko/.viminfo
+/home/antonkornienko/.config
+/home/antonkornienko/.config/dconf
+/home/antonkornienko/.config/dconf/user
+/home/antonkornienko/.config/Code
+/home/antonkornienko/.config/Code/Local Storage/leveldb
+/home/antonkornienko/.config/Code/Local Storage/leveldb/LOG.old
+/home/antonkornienko/.config/Code/Local Storage/leveldb/LOG
+
+Поиск по правам доступа
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find /home -perm 644 | head -n 10
+/home/antonkornienko/.pam_environment
+/home/antonkornienko/.ssh/known_hosts
+/home/antonkornienko/.bashrc
+/home/antonkornienko/.profile
+/home/antonkornienko/.config/Code/User/globalStorage/state.vscdb
+/home/antonkornienko/.config/Code/User/globalStorage/state.vscdb.backup
+/home/antonkornienko/.config/Code/User/workspaceStorage/140e1d55ec8750b0f86f7ced4879d416/state.vscdb
+/home/antonkornienko/.config/Code/User/workspaceStorage/140e1d55ec8750b0f86f7ced4879d416/state.vscdb.backup
+/home/antonkornienko/.config/Code/User/workspaceStorage/e07439f5ed2102effe0c5ec557c23272/state.vscdb
+/home/antonkornienko/.config/Code/User/workspaceStorage/e07439f5ed2102effe0c5ec557c23272/state.vscdb.backup
+
+
+
+Поиск по владельцу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find / -user antonkornienko 2>/dev/null | head -n 10
+/tmp/.X0-lock
+/tmp/.X1-lock
+/tmp/.ICE-unix/903
+/tmp/.X11-unix/X1
+/tmp/.X11-unix/X0
+/tmp/.com.google.Chrome.VkNhqb
+/tmp/.com.google.Chrome.VkNhqb/SingletonSocket
+/tmp/.com.google.Chrome.VkNhqb/SingletonCookie
+/tmp/.com.google.Chrome.RzUFTr
+/proc/785
+
+
+
+Вложенные команды
+
+Поиск файлов и вывод их подробной информации
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find ~/labs -type f -exec ls -l {} \;
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 19:33 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/some_file.txt
+-rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/2.sh
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1/3.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:26 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1/1_pdf.pdf
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1/2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1/1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:26 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1/2_pdf.pdf
+-rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/1.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/3.sh
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 19:47 /home/antonkornienko/labs/Kornienko_Anton_min_lb1/sim_links.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 59 фев 26 02:38 /home/antonkornienko/labs/hardlink2.txt
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mkdir empty_dir
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1  1.sh  2.sh  3.sh  cp_file.txt  empty_dir  ln_file.txt  sim_links.txt  some_file.txt
+
+Поиск директорий и удаление пустых
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find . -type d -empty -delete
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1  1.sh  2.sh  3.sh  cp_file.txt  ln_file.txt  sim_links.txt  some_file.txt
+
+Поиск файлов и подсчет строк
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat some_file.txt 
+1234
+12433412354324
+1451342341313134
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find . -type f -name "*.txt" -exec wc -l {} \;
+3 ./some_file.txt
+0 ./1/3.txt
+0 ./1/2.txt
+0 ./1/1.txt
+0 ./sim_links.txt
+
+Ищем файлы и выводим информацию о них
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ find . -type f -exec ls -l {} \;
+-rw-rw-r-- 1 antonkornienko antonkornienko 37 фев 26 21:37 ./some_file.txt
+-rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 ./2.sh
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 ./1/3.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:26 ./1/1_pdf.pdf
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 ./1/2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:25 ./1/1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 20:26 ./1/2_pdf.pdf
+-rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 ./1.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 ./3.sh
+-rw-rw-r-- 1 antonkornienko antonkornienko 0 фев 26 19:47 ./sim_links.txt
+
+6)
+Вывод содержимого файла в 16-битном формате
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ od -tx1 some_file.txt 
+0000000 56 69 6d 20 28 d1 81 d0 be d0 ba d1 80 2e 20 d0
+0000020 be d1 82 20 56 69 20 49 6d 70 72 6f 76 65 64 2c
+0000040 20 d0 bf d1 80 d0 be d0 b8 d0 b7 d0 bd d0 be d1
+0000060 81 d0 b8 d1 82 d1 81 d1 8f 20 c2 ab d0 b2 d0 b8
+0000100 d0 bc c2 bb 29 20 e2 80 94 20 d1 81 d0 b2 d0 be
+0000120 d0 b1 d0 be d0 b4 d0 bd d1 8b d0 b9 20 d1 82 d0
+0000140 b5 d0 ba d1 81 d1 82 d0 be d0 b2 d1 8b d0 b9 20
+0000160 d1 80 d0 b5 d0 b4 d0 b0 d0 ba d1 82 d0 be d1 80
+0000200 2c 20 d1 81 d0 be d0 b7 d0 b4 d0 b0 d0 bd d0 bd
+0000220 d1 8b d0 b9 20 d0 bd d0 b0 20 d0 be d1 81 d0 bd
+0000240 d0 be d0 b2 d0 b5 20 d0 b1 d0 be d0 bb d0 b5 d0
+0000260 b5 20 d1 81 d1 82 d0 b0 d1 80 d0 be d0 b3 d0 be
+0000300 20 76 69 2c 20 d1 80 d0 b0 d0 b7 d1 80 d0 b0 d0
+0000320 b1 d0 be d1 82 d0 b0 d0 bd d0 bd d0 be d0 b3 d0
+0000340 be 20 d0 91 d0 b8 d0 bb d0 bb d0 be d0 bc 20 d0
+0000360 94 d0 b6 d0 be d0 b9 d0 b5 d0 bc 2e 20
+0000375
+
+
+
+Вывод в шестнадцатеричном формате с символами ASCII.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ hexdump -C some_file.txt 
+00000000  56 69 6d 20 28 d1 81 d0  be d0 ba d1 80 2e 20 d0  |Vim (......... .|
+00000010  be d1 82 20 56 69 20 49  6d 70 72 6f 76 65 64 2c  |... Vi Improved,|
+00000020  20 d0 bf d1 80 d0 be d0  b8 d0 b7 d0 bd d0 be d1  | ...............|
+00000030  81 d0 b8 d1 82 d1 81 d1  8f 20 c2 ab d0 b2 d0 b8  |......... ......|
+00000040  d0 bc c2 bb 29 20 e2 80  94 20 d1 81 d0 b2 d0 be  |....) ... ......|
+00000050  d0 b1 d0 be d0 b4 d0 bd  d1 8b d0 b9 20 d1 82 d0  |............ ...|
+00000060  b5 d0 ba d1 81 d1 82 d0  be d0 b2 d1 8b d0 b9 20  |............... |
+00000070  d1 80 d0 b5 d0 b4 d0 b0  d0 ba d1 82 d0 be d1 80  |................|
+00000080  2c 20 d1 81 d0 be d0 b7  d0 b4 d0 b0 d0 bd d0 bd  |, ..............|
+00000090  d1 8b d0 b9 20 d0 bd d0  b0 20 d0 be d1 81 d0 bd  |.... .... ......|
+000000a0  d0 be d0 b2 d0 b5 20 d0  b1 d0 be d0 bb d0 b5 d0  |...... .........|
+000000b0  b5 20 d1 81 d1 82 d0 b0  d1 80 d0 be d0 b3 d0 be  |. ..............|
+000000c0  20 76 69 2c 20 d1 80 d0  b0 d0 b7 d1 80 d0 b0 d0  | vi, ...........|
+000000d0  b1 d0 be d1 82 d0 b0 d0  bd d0 bd d0 be d0 b3 d0  |................|
+000000e0  be 20 d0 91 d0 b8 d0 bb  d0 bb d0 be d0 bc 20 d0  |. ............ .|
+000000f0  94 d0 b6 d0 be d0 b9 d0  b5 d0 bc 2e 20           |............ |
+000000fd
+
+Создадим каталог
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mkdir catalog
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1  1.sh  2.sh  3.sh  catalog  cp_file.txt  ln_file.txt  sim_links.txt  some_file.txt
+
+Попробуем сделать анализ
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ od -tx1 catalog/
+od: catalog/: ошибка чтения: Это каталог
+0000000
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ hexdump -C catalog/
+hexdump: catalog/: Это каталог
+
+Анализ каталогов невозможен
+
+Запишем информацию в текстовый файл, который анализировали ранее
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ echo "One line" >> some_file.txt 
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat some_file.txt 
+Vim (сокр. от Vi Improved, произносится «вим») — свободный текстовый редактор, созданный на основе более старого vi, разработанного Биллом Джойем. One line
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ od -tx1 some_file.txt 
+0000000 56 69 6d 20 28 d1 81 d0 be d0 ba d1 80 2e 20 d0
+0000020 be d1 82 20 56 69 20 49 6d 70 72 6f 76 65 64 2c
+0000040 20 d0 bf d1 80 d0 be d0 b8 d0 b7 d0 bd d0 be d1
+0000060 81 d0 b8 d1 82 d1 81 d1 8f 20 c2 ab d0 b2 d0 b8
+0000100 d0 bc c2 bb 29 20 e2 80 94 20 d1 81 d0 b2 d0 be
+0000120 d0 b1 d0 be d0 b4 d0 bd d1 8b d0 b9 20 d1 82 d0
+0000140 b5 d0 ba d1 81 d1 82 d0 be d0 b2 d1 8b d0 b9 20
+0000160 d1 80 d0 b5 d0 b4 d0 b0 d0 ba d1 82 d0 be d1 80
+0000200 2c 20 d1 81 d0 be d0 b7 d0 b4 d0 b0 d0 bd d0 bd
+0000220 d1 8b d0 b9 20 d0 bd d0 b0 20 d0 be d1 81 d0 bd
+0000240 d0 be d0 b2 d0 b5 20 d0 b1 d0 be d0 bb d0 b5 d0
+0000260 b5 20 d1 81 d1 82 d0 b0 d1 80 d0 be d0 b3 d0 be
+0000300 20 76 69 2c 20 d1 80 d0 b0 d0 b7 d1 80 d0 b0 d0
+0000320 b1 d0 be d1 82 d0 b0 d0 bd d0 bd d0 be d0 b3 d0
+0000340 be 20 d0 91 d0 b8 d0 bb d0 bb d0 be d0 bc 20 d0
+0000360 94 d0 b6 d0 be d0 b9 d0 b5 d0 bc 2e 20 4f 6e 65
+0000400 20 6c 69 6e 65 0a
+0000406
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ hexdump -C some_file.txt 
+00000000  56 69 6d 20 28 d1 81 d0  be d0 ba d1 80 2e 20 d0  |Vim (......... .|
+00000010  be d1 82 20 56 69 20 49  6d 70 72 6f 76 65 64 2c  |... Vi Improved,|
+00000020  20 d0 bf d1 80 d0 be d0  b8 d0 b7 d0 bd d0 be d1  | ...............|
+00000030  81 d0 b8 d1 82 d1 81 d1  8f 20 c2 ab d0 b2 d0 b8  |......... ......|
+00000040  d0 bc c2 bb 29 20 e2 80  94 20 d1 81 d0 b2 d0 be  |....) ... ......|
+00000050  d0 b1 d0 be d0 b4 d0 bd  d1 8b d0 b9 20 d1 82 d0  |............ ...|
+00000060  b5 d0 ba d1 81 d1 82 d0  be d0 b2 d1 8b d0 b9 20  |............... |
+00000070  d1 80 d0 b5 d0 b4 d0 b0  d0 ba d1 82 d0 be d1 80  |................|
+00000080  2c 20 d1 81 d0 be d0 b7  d0 b4 d0 b0 d0 bd d0 bd  |, ..............|
+00000090  d1 8b d0 b9 20 d0 bd d0  b0 20 d0 be d1 81 d0 bd  |.... .... ......|
+000000a0  d0 be d0 b2 d0 b5 20 d0  b1 d0 be d0 bb d0 b5 d0  |...... .........|
+000000b0  b5 20 d1 81 d1 82 d0 b0  d1 80 d0 be d0 b3 d0 be  |. ..............|
+000000c0  20 76 69 2c 20 d1 80 d0  b0 d0 b7 d1 80 d0 b0 d0  | vi, ...........|
+000000d0  b1 d0 be d1 82 d0 b0 d0  bd d0 bd d0 be d0 b3 d0  |................|
+000000e0  be 20 d0 91 d0 b8 d0 bb  d0 bb d0 be d0 bc 20 d0  |. ............ .|
+000000f0  94 d0 b6 d0 be d0 b9 d0  b5 d0 bc 2e 20 4f 6e 65  |............ One|
+00000100  20 6c 69 6e 65 0a                                 | line.|
+00000106
+
+
+7)
+
+
+Ограничение на размер каталога может быть задано на уровне файловой системы. 
+Например, в файловых системах, таких как ext4, XFS, NTFS, существуют ограничения на максимальное количество файлов в каталоге и на максимальный размер файловой системы. 
+Эти ограничения обычно задаются при создании файловой системы и могут быть изменены с помощью соответствующих утилит (например, mkfs для Linux).
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 7.sh
+#!/bin/bash
+
+# Имя основной директории
+MAIN_DIR="test_directory"
+
+# Количество файлов
+NUM_FILES=100
+
+# Количество поддиректорий
+NUM_SUBDIRS=10
+
+# Размер каждого файла (в байтах)
+FILE_SIZE=1024  # 1 KB
+
+# Функция для получения размера директории
+get_directory_size() {
+    du -sb "$1" | awk '{print $1}'
+}
+
+# Создание основной директории
+mkdir -p "$MAIN_DIR"
+echo "Создана основная директория: $MAIN_DIR"
+echo "Размер каталога после создания: $(get_directory_size "$MAIN_DIR") байт"
+echo "----------------------------------------"
+
+# Создание 100 файлов
+for i in $(seq 1 $NUM_FILES); do
+    dd if=/dev/urandom of="$MAIN_DIR/file_$i.txt" bs=$FILE_SIZE count=1 status=none
+done
+echo "Создано $NUM_FILES файлов."
+echo "Размер каталога после создания файлов: $(get_directory_size "$MAIN_DIR") байт"
+echo "----------------------------------------"
+
+# Создание 10 поддиректорий
+for i in $(seq 1 $NUM_SUBDIRS); do
+    mkdir -p "$MAIN_DIR/subdir_$i"
+done
+echo "Создано $NUM_SUBDIRS поддиректорий."
+echo "Размер каталога после создания поддиректорий: $(get_directory_size "$MAIN_DIR") байт"
+echo "----------------------------------------"
+
+# Удаление 65 файлов
+for i in $(seq 1 65); do
+    rm -f "$MAIN_DIR/file_$i.txt"
+done
+echo "Удалено 65 файлов."
+echo "Размер каталога после удаления файлов: $(get_directory_size "$MAIN_DIR") байт"
+echo "----------------------------------------"
+
+# Удаление 7 поддиректорий
+for i in $(seq 1 7); do
+    rm -rf "$MAIN_DIR/subdir_$i"
+done
+echo "Удалено 7 поддиректорий."
+echo "Размер каталога после удаления поддиректорий: $(get_directory_size "$MAIN_DIR") байт"
+echo "----------------------------------------"
+
+# Удаление основной директории
+rm -rf "$MAIN_DIR"
+echo "Основная директория удалена."
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./7.sh
+Создана основная директория: test_directory
+Размер каталога после создания: 4096 байт
+----------------------------------------
+Создано 100 файлов.
+Размер каталога после создания файлов: 106496 байт
+----------------------------------------
+Создано 10 поддиректорий.
+Размер каталога после создания поддиректорий: 147456 байт
+----------------------------------------
+Удалено 65 файлов.
+Размер каталога после удаления файлов: 80896 байт
+----------------------------------------
+Удалено 7 поддиректорий.
+Размер каталога после удаления поддиректорий: 52224 байт
+----------------------------------------
+Основная директория удалена.
+----------------------------------------
+
+
+8)
+
+Файл /etc/passwd содержит информацию о пользователях системы. 
+Каждая строка соответствует одному пользователю и состоит из семи полей, разделенных двоеточием (:):
+
+
+username:x:UID:GID:gecos:/home/dir:/bin/shell
+
+username: Имя пользователя.
+
+x: Пароль (раньше хранился здесь, теперь заменен на x, а сам пароль хранится в /etc/shadow).
+
+UID: User ID (идентификатор пользователя).
+
+GID: Group ID (идентификатор группы пользователя).
+
+gecos: Дополнительная информация о пользователе (например, полное имя).
+
+/home/dir: Домашний каталог пользователя.
+
+/bin/shell: Командная оболочка пользователя.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:102:105::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:103:106:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+syslog:x:104:111::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+tss:x:106:113:TPM software stack,,,:/var/lib/tpm:/bin/false
+uuidd:x:107:116::/run/uuidd:/usr/sbin/nologin
+systemd-oom:x:108:117:systemd Userspace OOM Killer,,,:/run/systemd:/usr/sbin/nologin
+tcpdump:x:109:118::/nonexistent:/usr/sbin/nologin
+avahi-autoipd:x:110:119:Avahi autoip daemon,,,:/var/lib/avahi-autoipd:/usr/sbin/nologin
+usbmux:x:111:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
+dnsmasq:x:112:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin
+kernoops:x:113:65534:Kernel Oops Tracking Daemon,,,:/:/usr/sbin/nologin
+avahi:x:114:121:Avahi mDNS daemon,,,:/run/avahi-daemon:/usr/sbin/nologin
+cups-pk-helper:x:115:122:user for cups-pk-helper service,,,:/home/cups-pk-helper:/usr/sbin/nologin
+rtkit:x:116:123:RealtimeKit,,,:/proc:/usr/sbin/nologin
+whoopsie:x:117:124::/nonexistent:/bin/false
+sssd:x:118:125:SSSD system user,,,:/var/lib/sss:/usr/sbin/nologin
+speech-dispatcher:x:119:29:Speech Dispatcher,,,:/run/speech-dispatcher:/bin/false
+fwupd-refresh:x:120:126:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
+nm-openvpn:x:121:127:NetworkManager OpenVPN,,,:/var/lib/openvpn/chroot:/usr/sbin/nologin
+saned:x:122:129::/var/lib/saned:/usr/sbin/nologin
+colord:x:123:130:colord colour management daemon,,,:/var/lib/colord:/usr/sbin/nologin
+geoclue:x:124:131::/var/lib/geoclue:/usr/sbin/nologin
+pulse:x:125:132:PulseAudio daemon,,,:/run/pulse:/usr/sbin/nologin
+gnome-initial-setup:x:126:65534::/run/gnome-initial-setup/:/bin/false
+hplip:x:127:7:HPLIP system user,,,:/run/hplip:/bin/false
+gdm:x:128:134:Gnome Display Manager:/var/lib/gdm3:/bin/false
+antonkornienko:x:1000:1000:Anton,,,:/home/antonkornienko:/bin/bash
+
+Файл /etc/shadow содержит зашифрованные пароли пользователей и информацию о сроке действия паролей.
+
+antonkornienko:x:1000:1000:Anton,,,:/home/antonkornienko:/bin/bash
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat /etc/shadow
+cat: /etc/shadow: Отказано в доступе
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo cat /etc/shadow
+[sudo] пароль для antonkornienko: 
+root:$y$j9T$LVOtENjk4yK2ooIoUX5Dc/$.3PXyk5HbWOrDKaRLct.HO5MlVYbVdRgF.Zke3HNl01:20142:0:99999:7:::
+daemon:*:19576:0:99999:7:::
+bin:*:19576:0:99999:7:::
+sys:*:19576:0:99999:7:::
+sync:*:19576:0:99999:7:::
+games:*:19576:0:99999:7:::
+man:*:19576:0:99999:7:::
+lp:*:19576:0:99999:7:::
+mail:*:19576:0:99999:7:::
+news:*:19576:0:99999:7:::
+uucp:*:19576:0:99999:7:::
+proxy:*:19576:0:99999:7:::
+www-data:*:19576:0:99999:7:::
+backup:*:19576:0:99999:7:::
+list:*:19576:0:99999:7:::
+irc:*:19576:0:99999:7:::
+gnats:*:19576:0:99999:7:::
+nobody:*:19576:0:99999:7:::
+systemd-network:*:19576:0:99999:7:::
+systemd-resolve:*:19576:0:99999:7:::
+messagebus:*:19576:0:99999:7:::
+systemd-timesync:*:19576:0:99999:7:::
+syslog:*:19576:0:99999:7:::
+_apt:*:19576:0:99999:7:::
+tss:*:19576:0:99999:7:::
+uuidd:*:19576:0:99999:7:::
+systemd-oom:*:19576:0:99999:7:::
+tcpdump:*:19576:0:99999:7:::
+avahi-autoipd:*:19576:0:99999:7:::
+usbmux:*:19576:0:99999:7:::
+dnsmasq:*:19576:0:99999:7:::
+kernoops:*:19576:0:99999:7:::
+avahi:*:19576:0:99999:7:::
+cups-pk-helper:*:19576:0:99999:7:::
+rtkit:*:19576:0:99999:7:::
+whoopsie:*:19576:0:99999:7:::
+sssd:*:19576:0:99999:7:::
+speech-dispatcher:!:19576:0:99999:7:::
+fwupd-refresh:*:19576:0:99999:7:::
+nm-openvpn:*:19576:0:99999:7:::
+saned:*:19576:0:99999:7:::
+colord:*:19576:0:99999:7:::
+geoclue:*:19576:0:99999:7:::
+pulse:*:19576:0:99999:7:::
+gnome-initial-setup:*:19576:0:99999:7:::
+hplip:*:19576:0:99999:7:::
+gdm:*:19576:0:99999:7:::
+antonkornienko:$y$j9T$MbMh.WgYheoCBNWdOqfji/$wV4YoREpAT6UWuT0p.HqGOTIX.e7zERJLLaFL8y7IQ0:20142:0:99999:7:::
+
+Уже сейчас видно, что для вывода через cat требуются права root
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -l /etc/passwd
+-rw-r--r-- 1 root root 2905 фев 23 23:05 /etc/passwd
+
+Владелец может читать и исправлять, группа и другие могут читать
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 1545 фев 23 23:05 /etc/shadow
+
+Владелец может читать и исправлять, группа только читать, другие не имеют прав.
+
+Утилита /usr/bin/passwd используется для изменения паролей пользователей.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -l /usr/bin/passwd
+-rwsr-xr-x 1 root root 59976 фев  6  2024 /usr/bin/passwd
+
+s в поле владельца означает, что утилита выполняется с правами владельца (root), даже если запущена обычным пользователем. 
+Это называется SUID-бит.
+
+Это позволяет обычным пользователям изменять свои пароли, записанные в /etc/shadow, который доступен только для root.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ /usr/bin/passwd
+Смена пароля для antonkornienko.
+Текущий пароль: 
+Текущий пароль: 
+passwd: Ошибка при операциях с маркером проверки подлинности
+passwd: пароль не изменён
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ /usr/bin/passwd
+Смена пароля для antonkornienko.
+Текущий пароль: 
+Новый пароль: 
+НЕУДАЧНЫЙ ПАРОЛЬ: Пароль не указан
+Новый пароль: 
+НЕУДАЧНЫЙ ПАРОЛЬ: Пароль не указан
+Новый пароль: 
+НЕУДАЧНЫЙ ПАРОЛЬ: Пароль не указан
+passwd: Использовано максимальное число попыток, заданное для службы
+passwd: пароль не изменён
+
+9)
+
+1)
+
+
+Создадим тестовую дирректорию с файлами
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mkdir test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cd test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ touch file1.txt file2.txt file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls
+file1.txt  file2.txt  file3.txt
+
+Права доступа к файлам и каталогу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -la
+итого 8
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 28 16:48 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 16:48 ..
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file3.txt
+
+Изменим права доступа
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ chmod 644 file1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ chmod 755 .
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -la
+итого 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 16:48 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 16:48 ..
+-rw-r--r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file3.txt
+
+
+Изменим владельца и группу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo chown root file1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -la
+итого 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 16:48 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 16:48 ..
+-rw-r--r-- 1 root           antonkornienko    0 фев 28 16:48 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo chown :root file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -la
+итого 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 16:48 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 16:48 ..
+-rw-r--r-- 1 root           antonkornienko    0 фев 28 16:48 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 16:48 file2.txt
+-rw-rw-r-- 1 antonkornienko root              0 фев 28 16:48 file3.txt
+
+
+2)
+
+
+
+Создадим простой скрипт:
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mkdir test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1     2.sh  7.sh         ln_file.txt    some_file.txt
+1.sh  3.sh  cp_file.txt  sim_links.txt  test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cd test_directory/
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ echo '#!/bin/bash' > script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ echo 'echo "Hello"' >> script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ cat script.sh 
+#!/bin/bash
+echo "Hello"
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ chmod +x script.sh 
+Устанавливаем SUID
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ chmod u+s script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l script.sh
+-rwsrwxr-x 1 antonkornienko antonkornienko 70 фев 28 17:19 script.sh
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ./script.sh
+Hello
+
+3)
+
+Создадим пользователя
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo adduser testuser
+[sudo] password for antonkornienko: 
+Adding user `testuser' ...
+Adding new group `testuser' (1001) ...
+Adding new user `testuser' (1001) with group `testuser' ...
+Creating home directory `/home/testuser' ...
+Copying files from `/etc/skel' ...
+New password: 
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password: 
+Sorry, passwords do not match.
+New password: 
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for testuser
+Enter the new value, or press ENTER for the default
+	Full Name []: test_user_9_2
+	Room Number []: 
+	Work Phone []: 
+	Home Phone []: 
+	Other []: 
+Is the information correct? [Y/n] Y
+
+Создадим группу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo addgroup group1    
+[sudo] password for antonkornienko: 
+Adding group `group1' (GID 1002) ...
+Done.
+
+Добавим пользователя в группу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo usermod -aG group1 testuser
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ groups testuser
+testuser : testuser group1
+
+Создадим файл
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ touch file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls
+file.txt  script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l
+total 4
+-rw-rw-r-- 1 antonkornienko antonkornienko  0 фев 28 18:26 file.txt
+-rwsrwxr-x 1 antonkornienko antonkornienko 25 фев 28 17:42 script.sh
+
+Изменим владельца и группу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo chown testuser:group1 file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l
+total 4
+-rw-rw-r-- 1 testuser       group1          0 фев 28 18:26 file.txt
+-rwsrwxr-x 1 antonkornienko antonkornienko 25 фев 28 17:42 script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt 
+
+Изменим права доступа
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo chmod 640 file.txt
+
+Попытка вывести содержимое файла
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt 
+cat: file.txt: Permission denied
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l
+total 4
+-rw-r----- 1 testuser       group1          0 фев 28 18:26 file.txt
+-rwsrwxr-x 1 antonkornienko antonkornienko 25 фев 28 17:42 script.sh
+Переключаемся на другого пользователя
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ su testuser
+Password: 
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1/test_directory$ echo "some text" > file.txt
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt
+some text
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ sudo usermod -aG group1 antonkornienko
+[sudo] password for antonkornienko: 
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ groups group1
+groups: 'group1': no such user
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ groups antonkornienko
+antonkornienko : antonkornienko group1
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt
+cat: file.txt: Permission denied
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l
+total 8
+-rw-r----- 1 testuser       group1         10 фев 28 18:30 file.txt
+-rwsrwxr-x 1 antonkornienko antonkornienko 25 фев 28 17:42 script.sh
+
+Как видим доступа всё ещё нет
+
+Необходимо перезапустить систему
+
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ groups antonkornienko
+antonkornienko : antonkornienko group1
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ ls -l
+итого 8
+-rw-r----- 1 testuser       group1         10 фев 28 18:30 file.txt
+-rwsrwxr-x 1 antonkornienko antonkornienko 25 фев 28 17:42 script.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1/test_directory$ cat file.txt
+some text
+
+Файл доступен для чтения пользователю antonkornienko
+
+4)
+
+Добавим 3 файла
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -la
+итого 36
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 .
+drwxrwxr-x 3 antonkornienko antonkornienko 4096 фев 26 02:39 ..
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 26 20:26 1
+-rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 3.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 2322 фев 27 01:28 7.sh
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:39 cp_file.txt -> some_file.txt
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:47 sim_links.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko  262 фев 26 21:59 some_file.txt
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 28 19:16 test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ touch test_directory/file1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ touch test_directory/file2.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ touch test_directory/file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+итого 8
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 28 19:22 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 ..
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file3.txt
+
+
+Изменим права доступа
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod 755 test_directory/
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod 644 test_directory/file1.txt 
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+итого 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 19:22 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 ..
+-rw-r--r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod 750 test_directory/
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ su testuser
+Пароль: 
+
+Тестовый пользователь не может открыть каталог
+
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -l test_directory/
+ls: cannot open directory 'test_directory/': Permission denied
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ su antonkornienko
+Password: 
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+total 8
+drwxr-x--- 2 antonkornienko antonkornienko 4096 фев 28 19:22 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 ..
+-rw-r--r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file3.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ su testuser
+Password: 
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -l
+total 28
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 26 20:26 1
+-rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 3.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 2322 фев 27 01:28 7.sh
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:39 cp_file.txt -> some_file.txt
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:47 sim_links.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko  262 фев 26 21:59 some_file.txt
+drwxr-x--- 2 antonkornienko antonkornienko 4096 фев 28 19:22 test_directory
+
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+ls: cannot open directory 'test_directory/': Permission denied
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/file1.txt
+ls: cannot access 'test_directory/file1.txt': Permission denied
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ su antonkornienko
+Password: 
+
+Добавим право читать
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod 754 test_directory/
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -l
+total 28
+drwxrwxr-x 2 antonkornienko antonkornienko 4096 фев 26 20:26 1
+-rwxrwxr-x 1 antonkornienko antonkornienko 2387 фев 26 01:44 1.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1165 фев 26 02:31 2.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 1205 фев 26 20:14 3.sh
+-rwxrwxr-x 1 antonkornienko antonkornienko 2322 фев 27 01:28 7.sh
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:39 cp_file.txt -> some_file.txt
+lrwxrwxrwx 1 antonkornienko antonkornienko   13 фев 26 19:37 ln_file.txt -> some_file.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 26 19:47 sim_links.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko  262 фев 26 21:59 some_file.txt
+drwxr-xr-- 2 antonkornienko antonkornienko 4096 фев 28 19:22 test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ su testuser
+Password: 
+
+Тестовый пользователь может посмотреть подержимое каталога, но информация ограничена
+
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+ls: cannot access 'test_directory/file3.txt': Permission denied
+ls: cannot access 'test_directory/file2.txt': Permission denied
+ls: cannot access 'test_directory/..': Permission denied
+ls: cannot access 'test_directory/file1.txt': Permission denied
+ls: cannot access 'test_directory/.': Permission denied
+total 0
+d????????? ? ? ? ?              ? .
+d????????? ? ? ? ?              ? ..
+-????????? ? ? ? ?              ? file1.txt
+-????????? ? ? ? ?              ? file2.txt
+-????????? ? ? ? ?              ? file3.txt
+
+Нужно добавить права доступа +x
+
+antonkornienko@Ubuntu:~$ cd labs/Kornienko_Anton_min_lb1/
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod o+x test_directory/
+
+
+Информация полная
+
+Изменим права для файла
+
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+total 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 19:22 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 ..
+-rw-r--r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file3.txt
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod 640 test_directory/file1.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ echo "String" > test_directory/file1.txt 
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat test_directory/file1.txt 
+String
+
+Тестовый пользователь не может запустить файл
+
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls test_directory/
+file1.txt  file2.txt  file3.txt
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ ls -la test_directory/
+total 8
+drwxr-xr-x 2 antonkornienko antonkornienko 4096 фев 28 19:22 .
+drwxrwxr-x 4 antonkornienko antonkornienko 4096 фев 28 17:16 ..
+-rw-r----- 1 antonkornienko antonkornienko    0 фев 28 19:22 file1.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file2.txt
+-rw-rw-r-- 1 antonkornienko antonkornienko    0 фев 28 19:22 file3.txt
+testuser@Ubuntu:/home/antonkornienko/labs/Kornienko_Anton_min_lb1$ cat test_directory/file1.txt 
+cat: test_directory/file1.txt: Permission denied
+
+
+
+10)
+
+Используем тестового пользователя созданного ранее
+
+Через этого пользователя создадим файл доступный ему
+
+testuser@Ubuntu:~$ touch secret_file.txt
+
+testuser@Ubuntu:~$ ls -l
+total 0
+-rw-rw-r-- 1 testuser testuser 0 фев 28 23:25 secret_file.txt
+
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo chown :group1 ~/../testuser/secret_file.txt
+[sudo] пароль для antonkornienko: 
+
+testuser@Ubuntu:~$ ls -l
+total 0
+-rw-rw-r-- 1 testuser group1 0 фев 28 23:25 secret_file.txt
+
+Оставим права только владельцу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo chmod 600 /home/testuser/secret_file.txt
+
+testuser@Ubuntu:~$ ls -l
+total 0
+-rw------- 1 testuser group1 0 фев 28 23:25 secret_file.txt
+testuser@Ubuntu:~$ echo "some line" > secret_file.txt 
+testuser@Ubuntu:~$ cat secret_file.txt 
+some line
+
+Программа на Си:
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 10.c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *file;
+    char ch;
+
+    // Открываем файл, к которому нужен доступ
+    file = fopen("/home/testuser/secret_file.txt", "r");
+    if (file == NULL) {
+        perror("Ошибка при открытии файла");
+        exit(EXIT_FAILURE);
+    }
+
+    // Читаем и выводим содержимое файла
+    while ((ch = fgetc(file)) != EOF) {
+        putchar(ch);
+    }
+
+    fclose(file);
+    return 0;
+}
+
+Скомпилируем программу и назовем её gateway:
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ gcc 10.c -o gateway
+
+
+Установим SUID-бит на программу gateway, чтобы она выполнялась с правами владельца (testuser):
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo chown testuser:testuser gateway
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo chmod 4755 gateway
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo -u testuser ./gateway
+some line
+
+Исполняемый файл имеет флаг SUID
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls -l gateway 
+-rwsr-xr-x 1 testuser testuser 16168 мар  1 00:11 gateway
+
+Из предыдущих опытов основной пользователь остался в группе с тестовым
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ groups antonkornienko
+antonkornienko : antonkornienko group1
+
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo -u antonkornienko ./gateway
+some line
+
+Удалим основного пользователя из группы
+
+antonkornienko@Ubuntu:~$ groups antonkornienko
+antonkornienko : antonkornienko group1
+antonkornienko@Ubuntu:~$ sudo deluser antonkornienko group1
+[sudo] пароль для antonkornienko: 
+Удаляется пользователь «antonkornienko» из группы «group1» ...
+Готово.
+antonkornienko@Ubuntu:~$ groups antonkornienko
+antonkornienko : antonkornienko
+
+Пользователь всё равно может прочитать содержимое файла
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ sudo -u antonkornienko ./gateway
+some line
+
+SUID-бит позволяет программе выполняться с правами владельца файла, что делает её мощным инструментом для предоставления ограниченного доступа к файлам.
+
+11)
+
+1)
+
+Утилита df (disk free) используется для отображения информации о свободном и использованном пространстве на смонтированных файловых системах.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ df -h
+Файл.система   Размер Использовано  Дост Использовано% Cмонтировано в
+tmpfs            392M         1,6M  391M            1% /run
+/dev/sda3         24G          16G  7,5G           68% /
+tmpfs            2,0G         153M  1,8G            8% /dev/shm
+tmpfs            5,0M         4,0K  5,0M            1% /run/lock
+/dev/sda2        512M         6,1M  506M            2% /boot/efi
+tmpfs            392M         124K  392M            1% /run/user/1000
+
+
+Файл /etc/fstab содержит информацию о файловых системах, которые могут быть смонтированы автоматически при загрузке системы.
+
+Прочитаем
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda3 during installation
+UUID=3b997979-d5e6-4b00-b879-6a2d5ded02de /               ext4    errors=remount-ro 0       1
+# /boot/efi was on /dev/sda2 during installation
+UUID=D745-895B  /boot/efi       vfat    umask=0077      0       1
+/swapfile                                 none            swap    sw              0       0
+
+Утилита lsblk позволяет получить обзор всех блочных устройств, включая те, которые не смонтированы.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0    7:0    0 319,2M  1 loop /snap/code/184
+loop1    7:1    0     4K  1 loop /snap/bare/5
+loop2    7:2    0  63,4M  1 loop /snap/core20/1974
+loop3    7:3    0  63,7M  1 loop /snap/core20/2496
+loop4    7:4    0  73,9M  1 loop /snap/core22/1748
+loop5    7:5    0  73,9M  1 loop /snap/core22/858
+loop6    7:6    0 237,2M  1 loop /snap/firefox/2987
+loop7    7:7    0 257,9M  1 loop /snap/firefox/5783
+loop8    7:8    0 349,7M  1 loop /snap/gnome-3-38-2004/143
+loop9    7:9    0 485,5M  1 loop /snap/gnome-42-2204/120
+loop10   7:10   0  91,7M  1 loop /snap/gtk-common-themes/1535
+loop11   7:11   0  12,3M  1 loop /snap/snap-store/959
+loop12   7:12   0  53,3M  1 loop /snap/snapd/19457
+loop13   7:13   0  44,4M  1 loop /snap/snapd/23545
+loop14   7:14   0   568K  1 loop /snap/snapd-desktop-integration/253
+loop15   7:15   0   452K  1 loop /snap/snapd-desktop-integration/83
+sda      8:0    0    25G  0 disk 
+├─sda1   8:1    0     1M  0 part 
+├─sda2   8:2    0   513M  0 part /boot/efi
+└─sda3   8:3    0  24,5G  0 part /var/snap/firefox/common/host-hunspell
+                                 /
+sr0     11:0    1  1024M  0 rom  
+
+
+2)
+
+При помощи утилиты mount запишем в файл before.txt список смонтированных файловых систем до присоединения флешки
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mount > before.txt
+
+Присоединим флешку, запишем в файл after.txt список
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mount > after.txt
+
+Выведем разницу в файлах
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ diff before.txt after.txt
+45a46
+> /dev/sdb1 on /media/antonkornienko/ESD-USB type vfat (rw,nosuid,nodev,relatime,uid=1000,gid=1000,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,showexec,utf8,flush,errors=remount-ro,uhelper=udisks2)
+
+Устройство: /dev/sdb1 — это устройство, соответствующее подключенной флешке.
+
+Точка монтирования: /media/antonkornienko/ESD-USB — это директория, куда была смонтирована флешка.
+
+Тип файловой системы: vfat — тип файловой системы на флешке (FAT32).
+
+3)
+
+Ограничения хранятся в /usr/include/linux/limits.h
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat /usr/include/linux/limits.h
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+#ifndef _LINUX_LIMITS_H
+#define _LINUX_LIMITS_H
+
+#define NR_OPEN	        1024
+
+#define NGROUPS_MAX    65536	/* supplemental group IDs are available */
+#define ARG_MAX       131072	/* # bytes of args + environ for exec() */
+#define LINK_MAX         127	/* # links a file may have */
+#define MAX_CANON        255	/* size of the canonical input queue */
+#define MAX_INPUT        255	/* size of the type-ahead buffer */
+#define NAME_MAX         255	/* # chars in a file name */
+#define PATH_MAX        4096	/* # chars in a path name including nul */
+#define PIPE_BUF        4096	/* # bytes in atomic write to a pipe */
+#define XATTR_NAME_MAX   255	/* # chars in an extended attribute name */
+#define XATTR_SIZE_MAX 65536	/* size of an extended attribute value (64k) */
+#define XATTR_LIST_MAX 65536	/* size of extended attribute namelist (64k) */
+
+#define RTSIG_MAX	  32
+
+#endif
+
+Максимальная длина пути (PATH_MAX): 4096 символов
+Максимальная длина имени файла (XATTR_NAME_MAX): 255 символов
+
+Создадим скрипт, который создаст поддиректории в дирректории в количестве 1000
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat 11.sh
+mkdir -p long_path
+cd long_path
+for i in {1..1000}; do
+  mkdir "dir$i"
+  cd "dir$i"
+  
+  
+done
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./11.sh
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1     11.sh  2.sh  7.sh       before.txt   gateway      long_path      some_file.txt
+10.c  1.sh   3.sh  after.txt  cp_file.txt  ln_file.txt  sim_links.txt  test_directory
+
+Попробуем пройти рекурсивно по всем поддиректориям
+
+
+ls -lR long_path/
+
+При попытке открыть поддиректорию вложенности 600 возникает ошибка:
+
+ls: невозможно открыть каталог 'long_path/dir1/.../dir599/dir600': Слишком длинное имя файла
+
+В пути 4101 символ
+
+
+Создадим файлы разной длины имени
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ mkdir test
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1     11.sh  2.sh  7.sh       before.txt   gateway      sim_links.txt  test
+10.c  1.sh   3.sh  after.txt  cp_file.txt  ln_file.txt  some_file.txt  test_directory
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ touch create_files.sh
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ chmod +x create_files.sh 
+
+Они будут располагаться в дирректории test
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat create_files.sh 
+#!/bin/bash
+
+# Директория, в которой будут создаваться файлы
+output_dir="$(pwd)/test"
+
+# Создаем директорию, если она не существует
+mkdir -p "$output_dir"
+
+# Переходим в директорию
+cd "$output_dir" || exit
+
+# Максимальная длина имени файла
+max_length=256
+
+# Создаем файлы с именами разной длины
+for ((i=1; i<=max_length; i++)); do
+  # Генерируем имя файла, состоящее из 'a', повторенного i раз
+  filename=$(printf "%0.sa" $(seq 1 $i))
+  
+  # Создаем пустой файл
+  touch "$filename"
+  
+  # Проверяем, удалось ли создать файл
+  if [[ $? -ne 0 ]]; then
+    echo "Ошибка: не удалось создать файл с длиной имени $i"
+    break
+  fi
+  
+  echo "Создан файл: $filename"
+done
+
+echo "Все файлы созданы в директории: $(pwd)"
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ./create_files.sh 
+
+...
+touch: невозможно выполнить touch для 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa': Слишком длинное имя файла
+Ошибка: не удалось создать файл с длиной имени 256
+Все файлы созданы в директории: /home/antonkornienko/labs/Kornienko_Anton_min_lb1/test
+
+Максимальная длина имени файла составляет 255 символов
+
+
+12)
+
+1)
+
+Утилита file в Unix-подобных операционных системах используется для определения типа файла на основе его содержимого. 
+Она анализирует данные файла и сравнивает их с шаблонами, описанными в специальной базе данных, чтобы определить, к какому типу относится файл. 
+Эта база данных обычно находится в файлах /usr/share/mine/magic или /etc/magic. 
+В этих файлах описаны магические числа и другие характеристики, которые помогают идентифицировать тип файла.
+Это особенно полезно, когда расширение файла отсутствует или не соответствует его реальному содержимому.
+
+
+
+
+Алгоритм функционирования утилиты file
+Чтение файла
+
+Поиск в базе данных
+
+Сравнение данных
+
+Вывод результата
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ ls
+1      1.sh  7.sh        cp_file.txt      ln_file.txt    test
+10.c   2.sh  after.txt   create_files.sh  sim_links.txt  test_directory
+11.sh  3.sh  before.txt  gateway          some_file.txt
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file some_file.txt
+some_file.txt: Unicode text, UTF-8 text
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat /usr/share/file/magic.mgc | head -n 10
+�u9� =//Brain Vision Data Exchange Marker File, VersionBiosig/Brainvision Marker filebiosig/brainvision =.zFileId=TMSi PortiLab sample log file
+Version=Biosig/TMSiLOGbiosig/tmsilog =+}Synergy89(&88)&888&8888=?~CRawDataElement=UCRawDataBufferBiosig/SYNERGYbiosig/synergy =+.Brain Vision V-Amp Data Header File VersionBiosig/Brainvision V-Amp file =&-Brain Vision Data Exchange Header FileBiosig/Brainvision data file =#-----BEGIN OPENSSH PRIVATE KEY-----OpenSSH private key ="GNovell Message Librarian Data FileNovell message librarian datamsg =!jX5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR=#!k-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*EICAR virus test files =!ATES MEDICA SOFT. EEG for WindowsBiosig/ATES MEDICA SOFT. EEG for Windowsbiosig/ates = G���SketchUp ModelSketchUp Modelapplication/vnd.sketchup.skpskp =NetImmerse File Format, Version=n NetImmerse game engine file=
+[0-9a-z.]+, version %s =wSC68 Music-file / (c) (BeN)jamisc68 Atari ST music =#C64 tape image fileT64 tape Imagex
+ $Version:%#x!
+$%Entries:%ix(&Name:%.24s =(C64S tape image fileT64 tape Imagex
+ )Version:%#x!
+$*Entries:%ix(+Name:%.24s =1.0 Fri Feb 3 09:55:56 MET 1995Erlang JAM file - version 4.3 =3(*This is a Mathematica binary Mathematica binary file>X6from %s =---BEGIN PGP PRIVATE KEY BLOCK-PGP private key blockapplication/pgp-keysasc =B# Bazaar merge directive formatBazaar merge directive =\** This file contains an SQLiteSQLite 2.x database =�Cobalt Networks Inc.
+Firmware vPaged COBALT boot romx&�V%.4s =8�USE LYNX TO DISSOLVE THIS FILELyNX archive ==<Maker Intermediate Print FileFrameMaker IPL fileapplication/x-mif =
+                                                        Gamebryo File Format, Version Gamebryo game engine file=
+
+[0-9a-z.]+, version %s =---BEGIN PGP PUBLIC KEY BLOCK-PGP public key blockapplication/pgp-keysasc=
+d
+
+2)
+
+Выводит MIME-тип файла
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file -i gateway | head -n 10
+gateway: application/x-pie-executable; charset=binary
+
+Выводит тип файла без имени
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file -b gateway | head -n 10
+setuid ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c8bde73313ea71e0d4997a8bceabb5d37fa999c8, for GNU/Linux 3.2.0, not stripped
+
+
+Вывод типа для всех файлов в текущей дирректории
+
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file *
+1:               directory
+10.c:            C source, Unicode text, UTF-8 text
+11.sh:           ASCII text
+1.sh:            Bourne-Again shell script, Unicode text, UTF-8 text executable
+2.sh:            Bourne-Again shell script, Unicode text, UTF-8 text executable
+3.sh:            Bourne-Again shell script, Unicode text, UTF-8 text executable
+7.sh:            Bourne-Again shell script, Unicode text, UTF-8 text executable
+after.txt:       ASCII text
+before.txt:      ASCII text
+cp_file.txt:     symbolic link to some_file.txt
+create_files.sh: Bourne-Again shell script, Unicode text, UTF-8 text executable
+gateway:         setuid ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c8bde73313ea71e0d4997a8bceabb5d37fa999c8, for GNU/Linux 3.2.0, not stripped
+ln_file.txt:     symbolic link to some_file.txt
+sim_links.txt:   empty
+some_file.txt:   Unicode text, UTF-8 text
+test:            directory
+test_directory:  directory
+
+
+3)
+
+
+Напишем пользовательскую базу
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ vim my_magic
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ cat my_magic
+# My custom magic file
+# Format: offset type value description
+
+# Custom file type
+0 string MYTYPEFILEv1.0 MyCustomFileType v1.0
+
+# Additional rule for files with a specific data section
+0 string MYTYPEFILEv1.0 MyCustomFileType v1.0
+>15 string DATA data section present
+
+0 string MYTYPEFILEv1.0: Правило для идентификации файлов, которые начинаются с MYTYPEFILEv1.0.
+
+>15 string DATA: Дополнительное правило, которое проверяет наличие строки DATA на смещении 15 байт.
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ echo "MYTYPEFILEv1.0" > example.mytype
+
+Компиляция базы данных
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file -C -m my_magic
+
+Использование собственной базы данных
+
+antonkornienko@Ubuntu:~/labs/Kornienko_Anton_min_lb1$ file -m my_magic.mgc example.mytype
+example.mytype: MyCustomFileType v1.0
+

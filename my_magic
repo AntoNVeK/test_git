@@ -1,0 +1,9 @@
+# My custom magic file
+# Format: offset type value description
+
+# Custom file type
+0 string MYTYPEFILEv1.0 MyCustomFileType v1.0
+
+# Additional rule for files with a specific data section
+0 string MYTYPEFILEv1.0 MyCustomFileType v1.0
+>15 string DATA data section present
